@@ -1,0 +1,42 @@
+<section aria-label="Inventario" class="inventory">
+ <header><div><p class="eyebrow">ALMACÉN</p><h2>Materiales e inventario</h2><p>Entradas y consumos vinculados al trabajo del taller.</p></div><button type="button" (click)="refresh()" [disabled]="busy() || loading()">Actualizar inventario</button></header>
+ @if(error()) {<p role="alert" class="error">{{error()}}</p>}
+ @if(notice()) {<p role="status" class="success">{{notice()}}</p>}
+ @if(admin()) {
+ <form #materialForm="ngForm" (ngSubmit)="create(materialForm)" class="create">
+  <label>Nombre del material<input name="name" required maxlength="120" [(ngModel)]="material.name" placeholder="Ej. Acero redondo" /></label>
+  <label>Unidad de medida<select name="unit" [(ngModel)]="material.unit"><option value="UNIDAD">Unidad</option><option value="KG">Kilogramo</option><option value="METRO">Metro</option><option value="LITRO">Litro</option></select></label>
+  <button [disabled]="materialForm.invalid || busy()">Registrar material</button>
+ </form>
+ }
+ <div class="columns"><div>
+  <h3>Existencias</h3>
+  @if(loading()) {<p>Cargando materiales…</p>}
+  @else {
+   @for(m of materials(); track m.id) {
+    <button type="button" class="material" [class.selected]="selected()?.id === m.id" [disabled]="busy()" (click)="select(m)"><strong>{{m.name}}</strong><span>{{m.stock | number:'1.0-3'}} {{m.unit}} @if(m.stock === 0) { · Sin existencias}</span></button>
+   } @empty {<p>No hay materiales registrados.</p>}
+  }
+ </div><div>
+ @if(selected(); as current) {
+  <h3>{{current.name}}</h3><p>Disponible: <strong>{{current.stock | number:'1.0-3'}} {{current.unit}}</strong></p>
+  <form #movementForm="ngForm" (ngSubmit)="save(movementForm)">
+   <label>Tipo de movimiento<select name="kind" [(ngModel)]="movement.kind"><option value="CONSUME">Consumo en orden</option>@if(admin()) {<option value="ENTRY">Entrada de almacén</option>}</select></label>
+   @if(movement.kind === 'CONSUME') {
+    <label>Orden en proceso<select name="orderId" required [(ngModel)]="movement.orderId"><option [ngValue]="null">Selecciona una orden</option>@for(o of orders(); track o.id) {<option [ngValue]="o.id">#{{o.id}} · {{o.customerName}}</option>}</select></label>
+    @if(!orders().length) {<p>Inicia una orden para registrar su consumo de materiales.</p>}
+   }
+   <label>Cantidad ({{current.unit}})<input name="quantity" type="number" required [min]="current.unit === 'UNIDAD' ? 1 : 0.001" [step]="current.unit === 'UNIDAD' ? 1 : 0.001" max="99999999999.999" [(ngModel)]="movement.quantity" /></label>
+   <label>Motivo o referencia<input name="reason" required maxlength="250" [(ngModel)]="movement.reason" placeholder="Ej. Compra local o corte de eje" /></label>
+   <button [disabled]="movementForm.invalid || busy()">{{busy() ? 'Guardando…' : 'Registrar movimiento'}}</button>
+  </form>
+  <h3>Historial de movimientos</h3>
+  @if(historyLoading()) {<p>Cargando historial…</p>}
+  @else {
+   @for(m of movements(); track m.id) {
+    <article class="movement"><strong>{{m.kind === 'ENTRY' ? 'Entrada +' : 'Consumo −'}}{{m.quantity | number:'1.0-3'}} {{current.unit}}</strong><p>{{m.reason}}</p><small>@if(m.orderId) {Orden #{{m.orderId}} · }{{m.actorUsername}} · {{m.createdAt | date:'dd/MM/yyyy HH:mm'}}</small></article>
+   } @empty {<p>Todavía no hay movimientos.</p>}
+  }
+ } @else {<p>Selecciona un material para consultar movimientos o registrar uno nuevo.</p>}
+ </div></div>
+</section>

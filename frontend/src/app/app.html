@@ -1,0 +1,323 @@
+<div class="shell">
+  <aside>
+    <div class="brand">M<span>·</span></div>
+    <p class="brand-name">MAESTRANZA</p>
+    <div class="nav-item">◫ &nbsp; Operaciones</div>
+    <p class="aside-note">ERP / PROYECTO 01<br />Richard Grichukin Mendez</p>
+  </aside>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">CONTROL DEL TALLER</p>
+        <h1>Órdenes de trabajo</h1>
+        <p class="subtitle">Cada trabajo, desde el primer contacto.</p>
+      </div>
+      @if (isAdmin()) {
+        <button type="button" class="refresh" (click)="toggleUsers()">
+          {{ showUsers() ? 'Ocultar usuarios' : 'Gestionar usuarios' }}
+        </button>
+      }
+    </header>
+    <button type="button" class="refresh" [attr.aria-expanded]="showInventory()" (click)="showInventory.set(!showInventory())">{{ showInventory() ? 'Ocultar inventario' : 'Materiales e inventario' }}</button>
+    @if (showInventory()) { <app-inventory /> }
+    @if (error()) {
+      <div class="message error" role="alert">
+        {{ error() }} <button type="button" (click)="refresh()">Reintentar</button>
+      </div>
+    }
+    @if (notice()) {
+      <div class="message success" role="status">{{ notice() }}</div>
+    }
+
+<section class="panel period" aria-label="Filtros de órdenes">
+<h2>Resumen operativo</h2><p class="hint">Órdenes por fecha de creación, según la hora local de tu equipo. Incluye ambos días. Los contadores de órdenes y el listado reflejan todos los filtros.</p>
+<div class="filter-grid">        <label for="search">Buscar una orden</label
+        ><input
+          id="search"
+          type="search"
+          placeholder="Cliente, trabajo o número…"
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)"
+        />
+        <label for="status-filter">Filtrar por estado</label>
+        <select
+          id="status-filter"
+          [ngModel]="statusFilter()"
+          (ngModelChange)="statusFilter.set($event)"
+        >
+          <option value="">Todos los estados</option>
+          <option value="PENDING">Pendiente</option>
+          <option value="IN_PROGRESS">En proceso</option>
+          <option value="COMPLETED">Terminada</option>
+          <option value="DELIVERED">Entregada</option>
+        </select>
+
+<div><label for="date-from">Desde</label><input id="date-from" type="date" [ngModel]="dateFrom()" (ngModelChange)="dateFrom.set($event)" [attr.aria-invalid]="invalidPeriod()" /></div>
+<div><label for="date-to">Hasta</label><input id="date-to" type="date" [ngModel]="dateTo()" (ngModelChange)="dateTo.set($event)" [attr.aria-invalid]="invalidPeriod()" /></div>
+</div><button type="button" class="refresh" (click)="clearFilters()" [disabled]="!hasFilters()">Limpiar filtros</button>
+@if(invalidPeriod()) {<p class="message error" role="alert">La fecha Desde no puede ser posterior a Hasta.</p>}
+<p role="status">{{loading() ? 'Actualizando resumen…' : visibleOrders().length + ' de ' + orders().length + ' órdenes coinciden.'}}</p>
+</section>
+    <section class="metrics" aria-label="Resumen">
+      <article>
+        <span>CLIENTES</span><strong>{{ customers().length }}</strong
+        ><small>Total de contactos; sin filtros</small>
+      </article>
+      <article>
+        <span>ÓRDENES</span><strong>{{ loading() ? '—' : visibleOrders().length }}</strong
+        ><small>Trabajos recibidos</small>
+      </article>
+      <article>
+        <span>PENDIENTES</span><strong>{{ loading() ? '—' : pending() }}</strong
+        ><small>Por iniciar</small>
+      </article>
+<article><span>EN PROCESO</span><strong>{{ loading() ? '—' : summary().IN_PROGRESS }}</strong><small>Trabajos iniciados</small></article>
+<article><span>TERMINADAS</span><strong>{{ loading() ? '—' : summary().COMPLETED }}</strong><small>Por entregar</small></article>
+<article><span>ENTREGADAS</span><strong>{{ loading() ? '—' : summary().DELIVERED }}</strong><small>Trabajos cerrados</small></article>
+    </section>
+    @if (isAdmin() && showUsers()) {
+      <section class="panel user-management" aria-label="Gestión de operadores">
+        <h2>Usuarios del taller</h2>
+        <ul>
+          @for (u of users(); track u.id) {
+            <li>
+              {{ u.displayName }} · {{ u.username }} ·
+              {{ u.role === 'ADMIN' ? 'Administrador' : 'Operador' }}
+            </li>
+          }
+        </ul>
+        <h3>Crear operador</h3>
+        <form #uf="ngForm" (ngSubmit)="saveUser(uf)">
+          <label for="new-user">Nombre de usuario</label
+          ><input
+            id="new-user"
+            name="username"
+            [(ngModel)]="newUser.username"
+            required
+            pattern="[a-z][a-z0-9._-]{2,39}"
+            maxlength="40"
+            autocomplete="off"
+          />
+          <p class="hint">
+            Entre 3 y 40 caracteres. Empieza con una letra minúscula; admite números, punto, guion y
+            guion bajo.
+          </p>
+          <label for="new-name">Nombre para mostrar</label
+          ><input
+            id="new-name"
+            name="displayName"
+            [(ngModel)]="newUser.displayName"
+            required
+            maxlength="80"
+          />
+          <label for="new-password">Contraseña inicial</label
+          ><input
+            id="new-password"
+            name="password"
+            [(ngModel)]="newUser.password"
+            required
+            minlength="12"
+            maxlength="72"
+            type="password"
+            autocomplete="new-password"
+          />
+          <p class="hint">Al menos 12 caracteres; hasta 72 bytes UTF-8.</p>
+          <button class="primary" [disabled]="uf.invalid || savingUser()">
+            {{ savingUser() ? 'Creando…' : 'Crear operador' }}
+          </button>
+        </form>
+      </section>
+    }
+    <div class="workspace" [class.operator]="!isAdmin()">
+      @if (isAdmin()) {
+        <section class="panel forms">
+          <div class="section-title">
+            <span class="step">01</span>
+            <h2>Registrar cliente</h2>
+          </div>
+          <form #cf="ngForm" (ngSubmit)="saveCustomer(cf)">
+            <label for="name">Nombre o razón social</label
+            ><input
+              id="name"
+              name="name"
+              [(ngModel)]="customer.name"
+              required
+              maxlength="120"
+              placeholder="Ej. Taller Norte (ficticio)"
+            />
+            <label for="phone">Teléfono</label
+            ><input
+              id="phone"
+              name="phone"
+              [(ngModel)]="customer.phone"
+              required
+              maxlength="30"
+              type="tel"
+              placeholder="Ej. 70000000"
+            />
+            <label for="email">Correo <small>opcional</small></label
+            ><input
+              id="email"
+              name="email"
+              [(ngModel)]="customer.email"
+              type="email"
+              email
+              maxlength="160"
+              placeholder="contacto@example.com"
+            />
+            <button
+              class="secondary"
+              [disabled]="
+                cf.invalid || savingCustomer() || !customer.name.trim() || !customer.phone.trim()
+              "
+            >
+              {{ savingCustomer() ? 'Guardando…' : 'Registrar cliente' }}
+            </button>
+          </form>
+          <div class="section-title second">
+            <span class="step">02</span>
+            <h2>Crear orden</h2>
+          </div>
+          <form #of="ngForm" (ngSubmit)="saveOrder(of)">
+            <label for="customer">Cliente</label
+            ><select id="customer" name="customerId" [(ngModel)]="order.customerId" required>
+              <option [ngValue]="null" disabled>Selecciona un cliente</option>
+              @for (c of customers(); track c.id) {
+                <option [ngValue]="c.id">{{ c.name }}</option>
+              }
+            </select>
+            @if (!customers().length) {
+              <p class="hint">Registra primero un cliente para asociar el trabajo.</p>
+            }
+            <label for="description">Descripción del trabajo</label
+            ><textarea
+              id="description"
+              name="description"
+              [(ngModel)]="order.description"
+              required
+              maxlength="1000"
+              rows="3"
+              placeholder="Pieza, trabajo solicitado y observaciones…"
+            ></textarea>
+            <button
+              class="primary"
+              [disabled]="of.invalid || savingOrder() || !order.description.trim()"
+            >
+              {{ savingOrder() ? 'Creando…' : 'Crear orden de trabajo →' }}
+            </button>
+          </form>
+        </section>
+      }
+      <section class="panel orders">
+        <div class="list-header">
+          <div>
+            <p class="eyebrow">SEGUIMIENTO</p>
+            <h2>Trabajos recibidos</h2>
+          </div>
+          <button class="refresh" type="button" (click)="refresh()" [disabled]="loading()">
+            Actualizar
+          </button>
+        </div>
+        @if (loading()) {
+          <p class="empty" role="status">Cargando órdenes…</p>
+        } @else {
+          @for (o of visibleOrders(); track o.id) {
+            <article class="order">
+              <div class="order-heading">
+                <span class="order-number">OT-{{ o.id.toString().padStart(4, '0') }}</span
+                ><span class="status" [attr.data-status]="o.status">{{
+                  statusLabels[o.status]
+                }}</span>
+              </div>
+              <h3>{{ o.customerName }}</h3>
+              <p class="description">{{ o.description }}</p>
+              <time>{{ o.createdAt | date: 'dd/MM/yyyy · HH:mm' }}</time>
+              <div class="order-actions">
+                @if (actions[o.status]; as action) {
+                  @if (action.target !== 'DELIVERED' || isAdmin()) {
+                    <button
+                      class="advance"
+                      type="button"
+                      (click)="advance(o)"
+                      [disabled]="changingOrder() !== null"
+                    >
+                      {{ changingOrder() === o.id ? 'Guardando…' : action.label }}
+                    </button>
+                  } @else {
+                    <span class="closed-order">El administrador confirmará la entrega.</span>
+                  }
+                } @else {
+                  <span class="closed-order">Trabajo entregado</span>
+                }
+                <button
+                  class="refresh"
+                  type="button"
+                  (click)="toggleHistory(o.id)"
+                  [attr.aria-expanded]="historyOrder() === o.id"
+                  [attr.aria-controls]="'history-' + o.id"
+                >
+                  {{ historyOrder() === o.id ? 'Ocultar historial' : 'Ver historial' }}
+                </button>
+              </div>
+              @if (historyOrder() === o.id) {
+                <section
+                  class="history"
+                  [id]="'history-' + o.id"
+                  aria-label="Historial de la orden"
+                >
+                  <h4>Historial del trabajo</h4>
+                  @if (historyLoading()) {
+                    <p role="status">Cargando historial…</p>
+                  }
+                  @if (historyError()) {
+                    <p role="alert">{{ historyError() }}</p>
+                    <button type="button" class="refresh" (click)="loadHistory(o.id)">
+                      Reintentar historial
+                    </button>
+                  }
+                  <ol>
+                    @for (entry of historyEntries(); track entry.id) {
+                      <li>
+                        <strong>
+                          @if (entry.fromStatus) {
+                            {{ statusLabels[entry.fromStatus] }} →
+                          } @else {
+                            Registro inicial →
+                          }
+                          {{ statusLabels[entry.toStatus] }}</strong
+                        >
+                        <time>{{ entry.changedAt | date: 'dd/MM/yyyy · HH:mm:ss' }}</time>
+                        <span class="history-actor">{{
+                          entry.actorUsername
+                            ? 'Usuario: ' + entry.actorUsername
+                            : 'Registro anterior al control de usuarios'
+                        }}</span>
+                      </li>
+                    }
+                  </ol>
+                </section>
+              }
+            </article>
+          } @empty {
+            <div class="empty">
+              <span>▤</span>
+              <h3>
+                {{
+                  hasFilters() ? 'Sin coincidencias' : 'Tu próxima orden empieza aquí'
+                }}
+              </h3>
+              <p>
+                {{
+                  hasFilters()
+                    ? 'Prueba con otro cliente, descripción, estado o período.'
+                    : 'Registra un cliente y describe el trabajo solicitado.'
+                }}
+              </p>
+            </div>
+          }
+        }
+      </section>
+    </div>
+    <footer>Maestranza ERP · Clientes, órdenes y seguimiento del trabajo.</footer>
+  </main>
+</div>

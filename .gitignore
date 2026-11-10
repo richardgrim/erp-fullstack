@@ -1,0 +1,11 @@
+.env
+!.env.example
+**/target/
+**/node_modules/
+**/dist/
+**/.angular/
+*.log
+.idea/
+.vscode/
+evidence/local/
+release/
