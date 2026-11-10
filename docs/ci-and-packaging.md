@@ -20,5 +20,5 @@ Genera release/maestranza-erp-source-FECHA.zip y un archivo SHA256. Incluye fuen
 
 Es un paquete de fuentes, no un instalador ni un despliegue listo para Internet. Extraer y seguir docs/runbook.md para instalar dependencias, compilar y configurar las credenciales propias. Los artefactos frontend-dist de CI necesitan un servidor web con proxy /api al backend; no basta abrir index.html como archivo. El modo local documentado usa el servidor de desarrollo Angular.
 
-No se ha asignado todavía una licencia al proyecto. Su elección queda pendiente; la publicación del código no equivale a conceder una licencia.
+El código del proyecto se distribuye bajo [licencia MIT](../LICENSE). Las dependencias conservan sus respectivas licencias.
 

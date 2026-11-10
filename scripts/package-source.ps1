@@ -8,7 +8,7 @@ Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 # Lista explicita: nunca recorrer .env, target, node_modules, evidence/local o .git.
 $roots = @('.github','docs','scripts','backend/src','backend/.mvn','frontend/src','frontend/public')
-$files = @('README.md','.env.example','.gitignore','.gitattributes','compose.yaml',
+$files = @('LICENSE','README.md','.env.example','.gitignore','.gitattributes','compose.yaml',
  'backend/pom.xml','backend/mvnw','backend/mvnw.cmd','frontend/package.json',
  'frontend/package-lock.json','frontend/angular.json','frontend/tsconfig.json',
  'frontend/tsconfig.app.json','frontend/tsconfig.spec.json','frontend/proxy.conf.json')

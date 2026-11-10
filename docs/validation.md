@@ -57,4 +57,4 @@ Compilación de producción Angular completada sin advertencias de tamaño. Ento
 
 ## Publicación y primera ejecución remota
 
-9 de noviembre de 2026 (America/La_Paz): publicación autorizada de richardgrim/erp-fullstack. [ERP CI #1](https://github.com/richardgrim/erp-fullstack/actions/runs/42743654992) completó backend y frontend correctamente sobre el commit 66447e7eeab1b72dcb5d4c616e88254b08e677e1. Se generaron backend-jar, frontend-dist y backend-test-reports. GitHub mostró avisos de transición de runtimes de acciones y de ubuntu-latest, sin fallos de ejecución. Licencia pendiente de elección.
+9 de noviembre de 2026 (America/La_Paz): publicación autorizada de richardgrim/erp-fullstack. [ERP CI #1](https://github.com/richardgrim/erp-fullstack/actions/runs/42743654992) completó backend y frontend correctamente sobre el commit 66447e7eeab1b72dcb5d4c616e88254b08e677e1. Se generaron backend-jar, frontend-dist y backend-test-reports. GitHub mostró avisos de transición de runtimes de acciones y de ubuntu-latest, sin fallos de ejecución. La licencia se eligió posteriormente: MIT, autorizada por el propietario.

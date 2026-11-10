@@ -36,12 +36,11 @@ la API 8081 y PostgreSQL 5433. Todos se limitan al equipo local.
 
 ## Próximas entregas
 
-1. Elegir una licencia para el proyecto.
-2. Incorporar el proyecto al índice portfolio.
+1. Evolucionar las funciones según las necesidades del taller.
 
 Esta entrega todavía no incluye edición, borrado, facturación ni valoración económica del inventario.
 No utilizar con datos reales ni exponer a Internet.
-Licencia pendiente de elección; este repositorio todavía no concede una licencia de uso.
+Licencia [MIT](LICENSE). Copyright (c) 2026 Richard Grichukin Mendez.
 
 
 
