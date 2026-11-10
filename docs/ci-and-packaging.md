@@ -6,7 +6,7 @@
 
 El workflow tiene permiso contents: read, tiempos máximos de 15 minutos y acciones fijadas por SHA. Informes Java y compilaciones se conservan como artefactos durante siete días. No despliega servicios ni publica paquetes. Dependabot propone actualizaciones mensuales de Maven, npm y acciones; cada propuesta requiere revisión, no se fusiona automáticamente.
 
-Configuración preparada localmente. La primera ejecución remota y sus enlaces se añadirán después de autorizar la publicación. No se presenta como CI aprobado hasta entonces.
+Repositorio publicado con autorización del propietario. [Primera ejecución remota aprobada](https://github.com/richardgrim/erp-fullstack/actions/runs/42743654992): ambos trabajos completados y tres artefactos disponibles.
 
 ## Paquete de código fuente
 

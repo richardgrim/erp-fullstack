@@ -54,3 +54,7 @@ V4 aplicada correctamente en PostgreSQL local. Se conservan la cuenta administra
 16 pruebas de Angular aprobadas, incluidas cuatro nuevas: límites inclusivos del día local, combinación de filtros y limpieza, intervalo invertido y actualización de contadores tras cambios de estado. No hay cambios de servidor en esta entrega; sus 17 pruebas aprobadas corresponden a la entrega de inventario. Se verificó previamente en navegador el período 09/11/2026 y estado En proceso: una de dos órdenes coincide. La verificación visual final queda pendiente de iniciar sesión tras reiniciar el entorno.
 
 Compilación de producción Angular completada sin advertencias de tamaño. Entorno local reiniciado; la pestaña antigua del navegador integrado no permitió la comprobación final.
+
+## Publicación y primera ejecución remota
+
+9 de noviembre de 2026 (America/La_Paz): publicación autorizada de richardgrim/erp-fullstack. [ERP CI #1](https://github.com/richardgrim/erp-fullstack/actions/runs/42743654992) completó backend y frontend correctamente sobre el commit 66447e7eeab1b72dcb5d4c616e88254b08e677e1. Se generaron backend-jar, frontend-dist y backend-test-reports. GitHub mostró avisos de transición de runtimes de acciones y de ubuntu-latest, sin fallos de ejecución. Licencia pendiente de elección.

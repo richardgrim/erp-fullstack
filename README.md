@@ -1,5 +1,7 @@
 # Maestranza ERP
 
+[![ERP CI](https://github.com/richardgrim/erp-fullstack/actions/workflows/ci.yml/badge.svg)](https://github.com/richardgrim/erp-fullstack/actions/workflows/ci.yml)
+
 ERP en desarrollo para organizar los trabajos de una maestranza.
 Proyecto de portafolio de Richard Grichukin Mendez. Los datos de prueba son ficticios.
 
@@ -35,8 +37,7 @@ la API 8081 y PostgreSQL 5433. Todos se limitan al equipo local.
 ## Próximas entregas
 
 1. Elegir una licencia para el proyecto.
-2. Verificar la primera ejecución de GitHub Actions.
-3. Incorporar el proyecto al índice portfolio.
+2. Incorporar el proyecto al índice portfolio.
 
 Esta entrega todavía no incluye edición, borrado, facturación ni valoración económica del inventario.
 No utilizar con datos reales ni exponer a Internet.
@@ -47,3 +48,7 @@ Licencia pendiente de elección; este repositorio todavía no concede una licenc
 
 
 
+
+## Validación remota
+
+[Primera ejecución aprobada](https://github.com/richardgrim/erp-fullstack/actions/runs/42743654992): pruebas y compilación de backend y frontend; artefactos descargables desde GitHub Actions.
